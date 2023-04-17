@@ -1,0 +1,53 @@
+﻿@page "/capture"
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Fruit Grading system</PageTitle>
+
+<h1>Camera Capture</h1>
+
+<div class="row">
+
+    <div class="card col">
+        <label class="card-title" for="videoFeed">Live Feed</label>
+        <div width="720" height="480">
+            <video class="rounded-3 bg-black" id="videoFeed"/>
+        </div>
+    </div>
+
+    <div class="card col">
+        <label class="card-title" for="capturedFrame">Captured Frame</label>
+        <canvas class="card-img bg-black rounded-1" id="capturedFrame" />
+    </div>
+
+    <button class="btn btn-primary card-body" @onclick="CaptureFrame">Capture Frame</button>
+
+    @if(injectAnalyzecomponent)
+    {
+        <Analyze data=@imageData />
+    }
+
+</div>
+
+@code 
+{
+    bool injectAnalyzecomponent;
+
+    string? imageData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("startcamera", "videoFeed");
+    }
+
+    private async Task CaptureFrame()
+    {
+        await JSRuntime.InvokeAsync<string>("getFrame", "videoFeed", "capturedFrame", DotNetObjectReference.Create(this));
+    }
+
+    [JSInvokable]
+    public void ProcessImage(string image)
+    {
+        byte[] imageData = Convert.FromBase64String(image.Split(",")[1]);
+        injectAnalyzecomponent = true;
+    }
+}

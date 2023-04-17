@@ -1,0 +1,58 @@
+﻿@page "/upload"
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Fruit Grading System</PageTitle>
+
+<h1>File Upload</h1>
+
+<div class="card border-0">
+    <InputFile class="card-header" @ref="inputfile" OnChange="LoadFile" />
+    
+    @if(showImage)
+    {
+        <div class="mx-auto d-block" >
+            <img src="@imageSource" width="480" height="360"/>
+        </div>
+    }
+
+    @if(injectAnayzeComponent)
+    {
+        <Analyze data=@imageSource />
+    }
+
+</div>
+
+@code 
+{
+    bool injectAnayzeComponent, showImage;
+    public string? imageSource;
+    InputFile? inputfile;
+
+    public async Task LoadFile(InputFileChangeEventArgs fileEvent)
+    {
+        string ext = Path.GetExtension(fileEvent.File.Name.ToLower());
+
+        if(ext == ".jpeg" || ext == ".jpg" || ext == ".png")
+        {
+            MemoryStream ms = new MemoryStream();
+            await fileEvent.File.OpenReadStream().CopyToAsync(ms);
+
+            imageSource = $"data:image/{ext.Substring(1)};base64," + Convert.ToBase64String(ms.ToArray());
+            showImage = true;
+            injectAnayzeComponent = true;
+        }
+        else
+        {
+            await JSRuntime.InvokeAsync<string>("alertUser", "select image");
+            injectAnayzeComponent = false;
+            showImage = false;
+        }
+    }
+
+    [JSInvokable]
+    public void ProcessImage(string image)
+    {
+        showImage = true;
+    }
+
+}

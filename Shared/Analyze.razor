@@ -1,0 +1,55 @@
+﻿@inject HttpClient Http
+
+<div class="mx-auto d-block mt-3">
+    <button class="btn btn-secondary" @onclick="AnalyzeData">Analyze</button>
+</div>
+
+@if (results != null)
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Prediction</th>
+                <th>Quality</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var result in results)
+            {
+                <tr>
+                    <td>@result.ModelName</td>
+                    <td>@result.Prediction</td>
+                    <td>@result.Quality</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code 
+{
+    [Parameter]
+    public string? data {get; set;}
+    private ModelDetails[]? results;
+
+    public async void AnalyzeData()
+    {
+        string api = "https://heelo.com";
+        var requestBody = new { Type = "post", Data = data };
+        var response = await Http.PostAsJsonAsync(api, requestBody);
+        var results = await response.Content.ReadFromJsonAsync<ModelDetails[]>();
+
+        results = await Http.GetFromJsonAsync<ModelDetails[]>("sample-data/weather.json");
+    }
+
+    public class ModelDetails
+    {
+        public string? ModelName { get; set; }
+
+        public string? Prediction { get; set; }
+
+        public string? Quality { get; set; }
+    }
+    
+}

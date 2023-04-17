@@ -1,0 +1,27 @@
+﻿[
+  {
+    "modelname": "2022-01-06",
+    "prediction": "1",
+    "quality": "Freezing"
+  },
+  {
+    "modelname": "2022-01-07",
+    "prediction": "12",
+    "quality": "Bracing"
+  },
+  {
+    "modelname": "2022-01-08",
+    "prediction": "13",
+    "quality": "Freezing"
+  },
+  {
+    "modelname": "2022-01-09",
+    "prediction": "12",
+    "quality": "Balmy"
+  },
+  {
+    "modelname": "2022-01-10",
+    "prediction": "12",
+    "quality": "Chilly"
+  }
+]
