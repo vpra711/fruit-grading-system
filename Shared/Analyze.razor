@@ -35,8 +35,8 @@
 
     public async void AnalyzeData()
     {
-        string api = "https://heelo.com";
-        var requestBody = new { Type = "post", Data = data };
+        string api = "http://127.0.0.1:5000";
+        var requestBody = new { Type = "post", image = data };
         var response = await Http.PostAsJsonAsync(api, requestBody);
         var results = await response.Content.ReadFromJsonAsync<ModelDetails[]>();
 
