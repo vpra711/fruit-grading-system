@@ -1,28 +1,19 @@
-﻿@inject HttpClient Http
-
-<div class="mx-auto d-block mt-3">
+﻿<div class="mx-auto d-block mt-3">
     <button class="btn btn-secondary" @onclick="AnalyzeData">Analyze</button>
 </div>
 
-@if (results != null)
+@if (result != null)
 {
     <table class="table mt-3">
         <thead>
             <tr>
-                <th>Model</th>
-                <th>Prediction</th>
                 <th>Quality</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var result in results)
-            {
-                <tr>
-                    <td>@result.ModelName</td>
-                    <td>@result.Prediction</td>
-                    <td>@result.Quality</td>
-                </tr>
-            }
+            <tr>
+                <td>@result</td>
+            </tr>
         </tbody>
     </table>
 }
@@ -31,25 +22,18 @@
 {
     [Parameter]
     public string? data {get; set;}
-    private ModelDetails[]? results;
+    public string? result { get; set; }
 
-    public async void AnalyzeData()
+    private static HttpClient httpClient = new()
     {
-        string api = "http://127.0.0.1:5000";
-        var requestBody = new { Type = "post", image = data };
-        var response = await Http.PostAsJsonAsync(api, requestBody);
-        var results = await response.Content.ReadFromJsonAsync<ModelDetails[]>();
-
-        results = await Http.GetFromJsonAsync<ModelDetails[]>("sample-data/weather.json");
-    }
-
-    public class ModelDetails
+            BaseAddress = new Uri("http://127.0.0.1:5000"),
+    };
+      
+    public async Task AnalyzeData()
     {
-        public string? ModelName { get; set; }
+        StringContent requestContent = new(JsonSerializer.Serialize(new { image = data }), Encoding.UTF8, "application/json");
+        var response = await httpClient.PostAsync("predict", requestContent);
 
-        public string? Prediction { get; set; }
-
-        public string? Quality { get; set; }
+        result = await response.Content.ReadAsStringAsync();
     }
-    
 }

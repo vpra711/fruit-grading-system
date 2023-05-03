@@ -37,7 +37,7 @@
             MemoryStream ms = new MemoryStream();
             await fileEvent.File.OpenReadStream().CopyToAsync(ms);
 
-            imageSource = $"data:image/{ext.Substring(1)};base64," + Convert.ToBase64String(ms.ToArray());
+            imageSource = Convert.ToBase64String(ms.ToArray());
             showImage = true;
             injectAnayzeComponent = true;
         }
