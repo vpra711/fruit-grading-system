@@ -17,13 +17,3 @@ function getFrame(src, dest, dotnetHelper)
     let dataUrl = canvas.toDataURL("image/png", 1.0);
     dotnetHelper.invokeMethodAsync("ProcessImage", dataUrl);
 }
-
-function getImageUrlFromFile(src)
-{
-    return window.URL.createObjectURL(src.files[0]);
-}
-
-function alertUser(message)
-{
-    alert(message);
-}
