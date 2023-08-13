@@ -32,7 +32,7 @@
 {
     bool injectAnalyzecomponent;
 
-    string? imageData;
+    public string? imageData;
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,7 +47,8 @@
     [JSInvokable]
     public void ProcessImage(string image)
     {
-        byte[] imageData = Convert.FromBase64String(image.Split(",")[1]);
+        imageData = image;
+        //byte[] imageData = Convert.FromBase64String(image.Split(",")[1]);
         injectAnalyzecomponent = true;
     }
 }

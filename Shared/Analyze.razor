@@ -33,7 +33,7 @@
     {
         StringContent requestContent = new(JsonSerializer.Serialize(new { image = data }), Encoding.UTF8, "application/json");
         var response = await httpClient.PostAsync("predict", requestContent);
-
+        
         result = await response.Content.ReadAsStringAsync();
     }
 }
